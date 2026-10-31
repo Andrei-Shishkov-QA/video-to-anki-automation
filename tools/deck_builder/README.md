@@ -1,90 +1,56 @@
-# 🃏 Anki Deck Builder Automation
-A powerful GUI tool designed to automate the creation of rich media Anki decks. It streamlines the process of combining text, audio (Google TTS), images, and video clips into ready-to-use `.apkg` files.
-Designed for language learners and educators who need to generate high-quality flashcards in bulk.
+# Deck Builder
 
-## 🎥 Demos
+A desktop app that builds Anki decks from phrases, images and video clips, with audio from Google Text-to-Speech. Part of [Video-to-Anki](../../README.md). The code was written with an AI coding assistant.
 
-### 2. Deck Builder (Generation Process)
-![Deck Builder Demo](img/demo_animation(deck_builder).gif)
+**Stack:** Python 3.10+, Tkinter, genanki, Google Cloud Text-to-Speech, MoviePy, Pillow, FFmpeg
 
-## ✨ Features
+![Deck Builder demo](img/demo_animation(deck_builder).gif)
 
-* **GUI Interface:** User-friendly interface built with `tkinter` for easy configuration.
-* **Google Cloud TTS:** High-quality neural audio generation for phrases.
-* **Smart Video Handling:** Automatic compatibility checks for different platforms:
-    * `.mp4` (iOS & Android compatible)
-    * `.m4v` (iOS optimized)
-    * `.webm` (PC & Android optimized)
-* **Flexible Layouts:** Support for "Front-to-Back", "Back-to-Front", and "Mixed" card types.
-* **Media Processing:** Automatic resizing and formatting of images and videos.
-* **Naming Convention:** Auto-generates detailed filenames containing deck stats, date, and compatibility info.
+## What it does
 
-## 🛠 Tech Stack
+- Builds a ready `.apkg` deck for Anki.
+- Adds audio for each phrase with Google Text-to-Speech.
+- Card types: front-to-back, back-to-front, or both.
+- Resizes images and converts video for the target device.
+- Names the output file with the deck size, date and video format.
 
-* **Language:** Python 3.10+
-* **GUI:** Tkinter
-* **Media Processing:** MoviePy, Pillow (PIL), FFmpeg
-* **Anki Integration:** `genanki`
-* **Cloud Services:** Google Cloud Text-to-Speech API
+## How to run
 
-## 🚀 Installation & Setup
+1. Install [FFmpeg](https://ffmpeg.org/download.html).
+2. Install packages:
+   ```bash
+   cd tools/deck_builder
+   pip install -r requirements.txt
+   ```
+3. For audio: put a Google Cloud key (JSON) into `keys/` — steps in `keys/README.txt`. The key is not stored in the repository.
+4. Run:
+   ```bash
+   python main.py
+   ```
 
-### 1. Prerequisites
-Ensure you have [FFmpeg](https://ffmpeg.org/download.html) installed on your system (required for video processing).
-
-### 2. Install Dependencies
-Navigate to the tool directory and install the required packages:
-
-```bash
-cd tools/deck_builder
-pip install -r requirements.txt
-```
-### 3. Google Cloud TTS Setup
-To use high-quality audio, you need a Google Cloud Service Key.
-1. Place your JSON key file in the `keys/` directory.
-2. Follow the detailed instructions in `keys/README.txt` to configure the Project ID.
-
-## 📂 Input Data Structure
-The tool expects a specific folder structure for input data. By default, it looks into the `input` folder, but you can select any directory via the GUI.
-
-**Required File Structure:**
+## Input folder
 
 ```text
 /your_input_folder/
-├── ru_text.txt       # List of Russian phrases (one per line)
-├── en_text.txt       # List of English translations (one per line)
-├── images/           # Images named by number: 001.jpg, 002.jpg...
-└── video/            # Videos named by number: 001.mp4, 002.mp4...
+├── ru_text.txt    # Russian phrases, one per line
+├── en_text.txt    # English translations, one per line
+├── images/        # 001.jpg, 002.jpg ...
+└── video/         # 001.mp4, 002.mp4 ...
 ```
 
-> **Note:** The tool includes an "Import Videos" feature that attempts to automatically rename and index video files if they contain numbers (e.g., `my_video_45.mp4` -> `045.mp4`).
+**Import Videos** can rename files by the number in the name (`my_video_45.mp4` → `045.mp4`).
 
-## 📖 Usage Guide
+## How to use
 
-1. **Run the Application:**
-```bash
-python main.py
-```
-2. **Select Input Directory:** Choose the folder containing your text files and media.
-3. **Import Data:**
-   * Click **"Import Phrases"** to load text from `.txt` files.
-   * Click **"Import Videos"** to index and prepare video files.
-4. **Configure Deck:**
-   * Set the **Deck Name**.
-   * Choose **Deck Type** (e.g., Mixed for double-sided cards).
-   * Select **Video Format** based on your target device (iOS/Android).
-   * Customize card fields (Front/Back content order).
-5. **Generate:** Click **"Create Deck"**. The result will be saved in the `output/` folder.
+1. Choose the input folder.
+2. **Import Phrases** and **Import Videos**.
+3. Set the deck name, card type, video format and field order.
+4. Click **Create Deck**. The deck is saved to `output/`.
 
-## 📱 Video Compatibility Guide
+## Video formats
 
-* The tool adapts the deck based on the target platform:
-| Format   | Target Platform |                      Description                     |
-| :------- | :-------------- | :--------------------------------------------------- |
-| **MP4**  | iOS & Android   | Universal format, best compatibility.                |
-| **M4V**  | iOS             | Optimized for Apple devices.                         |
-| **WEBM** | PC & Android    | Lightweight, open web format (not supported on iOS). |
-
-## 📝 License
-
-* This project is part of a personal portfolio.
+| Format | Devices | Note |
+|:--|:--|:--|
+| MP4 | iOS and Android | works everywhere |
+| M4V | iOS | for Apple devices |
+| WEBM | PC and Android | does not play on iOS |
