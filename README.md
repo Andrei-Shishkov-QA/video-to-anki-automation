@@ -1,97 +1,60 @@
-# 🎬 Video-to-Anki Automation Suite
+# Video-to-Anki
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![GUI](https://img.shields.io/badge/GUI-PyQt5-green)
-![Status](https://img.shields.io/badge/Status-Production-orange)
+![GUI](https://img.shields.io/badge/GUI-PyQt5%20·%20Tkinter-green)
+![Status](https://img.shields.io/badge/Status-Personal%20tool-lightgrey)
 
-## 🎥 Demos
+Two small desktop tools I made for myself to learn English from films and series. They turn subtitles and video into Anki flashcards with video clips and audio.
 
-### 1. Subtitle Processor (Extraction Logic)
-![Subtitle Extractor Demo](img/demo_animation(subtitle_extractor).gif)
+## How it was built
 
-### 2. Deck Builder (Generation Process)
-![Deck Builder Demo](img/demo_animation(deck_builder).gif)
+The code was written with an AI coding assistant (May 2025 – January 2026).
 
-**A comprehensive ETL (Extract, Transform, Load) pipeline for language learners.**
-This suite automates the creation of high-quality Anki flashcards from raw video content, combining a **Desktop GUI** for precision work and **CLI tools** for batch processing.
+My part:
+- idea and requirements: what the tools should do in my own learning routine;
+- testing the tools on my own films and phrase lists and checking the resulting cards in Anki;
+- Git: feature branches (`feature/gemini-api-test`, `go_to_sqlite`) and a release branch (`release/v1.0`).
 
----
+There are almost no automated tests — the tools were tested by hand.
 
-## 🚀 Key Features (The "Why")
-* **Smart Parsing (NLP):** Uses `pymorphy3` and Levenshtein distance to match phrases regardless of word forms (e.g., matches "go" with "going").
-* **Concurrency:** Implements `QThread` and thread-safe DB locking to perform heavy parsing without freezing the UI.
-* **Cloud Integration:** Connects to **Google Cloud TTS** to generate audio for phrases missing from the original video.
-* **Data Integrity:** SQLite-based session management allows pausing and resuming large projects.
+## Demos
 
----
+### Subtitle Processor
+![Subtitle Processor demo](img/demo_animation(subtitle_extractor).gif)
 
-## 🏗️ Architecture & Components
+### Deck Builder
+![Deck Builder demo](img/demo_animation(deck_builder).gif)
 
-The repository is structured as a monorepo containing two specialized tools:
+## Tools
 
-### 1. Subtitle Processor (GUI)
-*Located in `/tools/subtitle_extractor`*
-**The Core Engine.** A desktop app for extracting context from movies.
-* **Stack:** PyQt5, SQLite, FFmpeg.
-* **Tech Highlight:** Uses a custom algorithm to interpolate sub-sentence timestamps based on word density distribution.
-* **Feature:** Manual Override Mode allows patching missing data via external editor integration.
+| Tool | What it does | Stack |
+|:--|:--|:--|
+| **Subtitle Processor** (`tools/subtitle_extractor`) | Finds phrases from your list in the subtitles, even in another word form. You can fix matches and timestamps by hand and export only the lines you need. | PyQt5, SQLite, pymorphy3, pysrt |
+| **Deck Builder** (`tools/deck_builder`) | Builds an Anki deck (`.apkg`) from phrases, images and video clips. Adds audio with Google Text-to-Speech. Video formats for iOS, Android and PC. | Tkinter, genanki, Google Cloud TTS, MoviePy, Pillow |
 
-### 2. Anki Deck Builder (CLI)
-*Located in `/tools/deck_builder`*
-**The Assembler.** A script that packages data into `.apkg` files.
-* **Stack:** Google Cloud API, GenAnki.
-* **Tech Highlight:** Automates the "Copy-Paste" routine, reducing card creation time from **3 minutes** to **<5 seconds**.
+## Repository structure
 
----
-
-## 🛠 Tech Stack Overview
-
-| Category | Technologies used |
-| :--- | :--- |
-| **Core** | Python 3.10+, Threading, OOP |
-| **Interface** | PyQt5 (Desktop GUI) |
-| **Data & NLP** | SQLite, Pandas, Pymorphy3 (Lemmatization), Difflib (Fuzzy Matching) |
-| **Media & API** | FFmpeg Wrapper, Google Cloud Text-to-Speech |
-
----
-
-## 📂 Repository Structure (Monorepo)
 ```text
 video-to-anki-automation/
 ├── tools/
-│   ├── subtitle_extractor/  # GUI Application (PyQt5)
-│   │   ├── app.py           # Entry point & Event Loop
-│   │   ├── database.py      # Thread-safe SQLite wrapper
-│   │   └── utils.py         # NLP & Math algorithms
-│   │
-│   └── deck_builder/        # Automation Script (CLI)
-│       ├── main.py
-│       └── api_client.py    # GCP Integration
-│
-├── data/                    # Shared input/output directory
-├── requirements.txt         # Unified dependencies
+│   ├── subtitle_extractor/   # Subtitle Processor (PyQt5)
+│   └── deck_builder/         # Deck Builder (Tkinter)
+├── img/                      # demo animations
+├── requirements.txt
 └── README.md
 ```
 
-## ⚙️ How to Run
-Prerequisites
-1. Python 3.10+
-2. FFmpeg (Added to system PATH)
+## How to run
 
-Installation
-   ```bash
-# Clone the repository
-git clone [https://github.com/Andrei-Shishkov-QA/video-to-anki-automation.git](https://github.com/Andrei-Shishkov-QA/video-to-anki-automation.git)
-# Install dependencies
+You need Python 3.10+ and [FFmpeg](https://ffmpeg.org/download.html).
+
+```bash
+git clone https://github.com/Andrei-Shishkov-QA/video-to-anki-automation.git
+cd video-to-anki-automation
 pip install -r requirements.txt
-   ```
-Usage
-To run the GUI (Subtitle Processor):
-   ```bash
-python tools/subtitle_extractor/app.py
-   ```
-To run the Deck Builder:
-   ```bash
-python tools/deck_builder/main.py --input "processed_data.json"
-   ```
-Developed by Andrei Shishkov. Focus: QA Automation, Tooling, and ETL Processes.
+
+python tools/subtitle_extractor/app.py   # Subtitle Processor
+python tools/deck_builder/main.py        # Deck Builder
+```
+
+Deck Builder needs a Google Cloud key for audio — see `tools/deck_builder/keys/README.txt`.
